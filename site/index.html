@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Destinos IATI</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;700;800&display=swap">
 <style>
 /* Layout: full-bleed night globe as the stage; a single right-hand rail carries market, total and ranking. Built for a 16:9 wall screen, stacks on phones. */
 :root{
@@ -13,7 +13,7 @@
   --brand:#FBBA00;
   --m-ES:#FBBA00; --m-PT:#35d0b0; --m-IT:#ff7a6b; --m-LATAM:#b28cff; --m-ROW:#5aa9ff;
   --display:"Onest",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
-  --mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+  --mono:var(--display);
   color-scheme:dark;
 }
 html,body{height:100%}
@@ -24,7 +24,7 @@ body{margin:0;background:var(--ink);color:var(--fg);font-family:var(--display);o
 #globe canvas{display:block}
 .brandmark{position:absolute;left:clamp(16px,2.5vw,48px);top:clamp(16px,2.5vw,44px);z-index:2;pointer-events:none}
 .brandmark .eyebrow{font:500 clamp(11px,.85vw,16px)/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--brand)}
-.brandmark h1{margin:.35em 0 0;font-weight:800;font-size:clamp(28px,3.4vw,72px);line-height:.95;letter-spacing:-.02em;text-wrap:balance}
+.brandmark h1{margin:0;font-weight:800;font-size:clamp(28px,3.4vw,72px);line-height:.95;letter-spacing:-.02em;text-wrap:balance}
 .brandmark p{margin:.6em 0 0;color:var(--muted);font-size:clamp(13px,1vw,20px)}
 .legend{position:absolute;left:clamp(16px,2.5vw,48px);bottom:clamp(16px,2.5vw,40px);z-index:2;display:flex;flex-wrap:wrap;gap:.4em 1.4em;font:500 clamp(11px,.8vw,15px)/1.2 var(--mono);color:var(--muted)}
 .legend span{display:inline-flex;align-items:center;gap:.5em}
@@ -70,7 +70,6 @@ body{margin:0;background:var(--ink);color:var(--fg);font-family:var(--display);o
   <div class="stage" id="stage">
     <div id="globe"></div>
     <div class="brandmark">
-      <div class="eyebrow">IATI Seguros · pólizas vendidas</div>
       <h1>¿A dónde viajan<br>nuestros clientes?</h1>
     </div>
     <div class="legend" id="legend"></div>
