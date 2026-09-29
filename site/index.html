@@ -52,6 +52,8 @@ body{margin:0;background:var(--ink);color:var(--fg);font-family:var(--display);o
 .rank .b{grid-column:2/4;height:4px;background:var(--line);border-radius:2px;overflow:hidden}
 .rank .b i{display:block;height:100%;background:var(--accent,var(--brand));border-radius:2px;transition:width .8s ease}
 .foot{display:flex;justify-content:space-between;gap:1em;flex-wrap:wrap;font:400 clamp(10px,.72vw,14px)/1.4 var(--mono);color:var(--muted);border-top:1px solid var(--line);padding-top:.9em}
+.glabel{pointer-events:none;transition:opacity .4s}
+.glabel span{display:block;transform:translate(-50%,-135%);white-space:nowrap;font:700 14px/1 var(--display);color:var(--fg);text-shadow:0 1px 3px var(--ink),0 0 10px var(--ink)}
 .fs{appearance:none;background:none;border:0;color:var(--muted);font:inherit;cursor:pointer;padding:0;text-decoration:underline}
 .fs:focus-visible{outline:2px solid var(--brand)}
 
@@ -146,8 +148,10 @@ const G=Globe({animateIn:!reduce})(el)
   .arcDashLength(0.45).arcDashGap(1.2).arcDashInitialGap(()=>Math.random()*1.6)
   .arcDashAnimateTime(reduce?0:3600).arcAltitudeAutoScale(0.42)
   .ringLat(r=>r.lat).ringLng(r=>r.lng).ringMaxRadius(r=>r.r).ringPropagationSpeed(1.6).ringRepeatPeriod(r=>r.p)
-  .labelLat(l=>l.lat).labelLng(l=>l.lng).labelText(l=>l.t).labelSize(l=>l.s).labelDotRadius(l=>l.s*0.28)
-  .labelColor(()=>'rgba(243,241,234,0.92)').labelResolution(3).labelAltitude(0.012);
+  // HTML labels: the built-in 3D label font has no ñ/accents, Onest does
+  .htmlLat(l=>l.lat).htmlLng(l=>l.lng).htmlAltitude(0.015)
+  .htmlElement(l=>{const w=document.createElement('div');w.className='glabel';const s=document.createElement('span');s.textContent=l.t;s.style.fontSize=`clamp(12px,${(0.75+0.75*l.s).toFixed(2)}vw,34px)`;w.appendChild(s);return w;})
+  .htmlElementVisibilityModifier((el,visible)=>{el.style.opacity=visible?1:0;});
 const mat=G.globeMaterial(); mat.color.set('#131a2b'); mat.emissive&&mat.emissive.set('#0a0f1c'); mat.shininess=4;
 G.controls().autoRotate=!reduce; G.controls().autoRotateSpeed=0.35; G.controls().enableZoom=true;
 function size(){G.width(el.clientWidth).height(el.clientHeight);}
@@ -168,7 +172,7 @@ function render(v){
   const top=v.list.filter(([i])=>D.cen[i]).slice(0,12);
   G.ringsData(top.map(([i,n],j)=>({lat:D.cen[i][0],lng:D.cen[i][1],r:2+5*Math.sqrt(n/max),p:900+j*140})))
    .ringColor(()=>t=>hexA(c,1-t));
-  G.labelsData(top.slice(0,8).map(([i,n])=>({lat:D.cen[i][0],lng:D.cen[i][1],t:nm(i),s:0.45+0.75*Math.sqrt(n/max)})));
+  G.htmlElementsData(top.slice(0,8).map(([i,n])=>({lat:D.cen[i][0],lng:D.cen[i][1],t:nm(i),s:Math.sqrt(n/max)})));
 
   // rail
   const withDest=v.pol-v.reg-v.unk;
