@@ -165,7 +165,7 @@ const G=Globe({animateIn:!reduce})(el)
   .htmlLat(l=>l.lat).htmlLng(l=>l.lng).htmlAltitude(0.015)
   .htmlElement(l=>{const w=document.createElement('div');w.className='glabel';const s=document.createElement('span');s.textContent=l.t;s.style.fontSize=`clamp(12px,${(0.75+0.75*l.s).toFixed(2)}vw,34px)`;w.appendChild(s);return w;})
   .htmlElementVisibilityModifier((el,visible)=>{el.style.opacity=visible?1:0;});
-const mat=G.globeMaterial(); mat.color.set('#f4ecdc'); mat.emissive&&mat.emissive.set('#d9cfb8'); mat.shininess=0;
+const mat=G.globeMaterial(); mat.color.set('#bfe4f3'); mat.emissive&&mat.emissive.set('#86c3de'); mat.shininess=0;
 G.controls().autoRotate=!reduce; G.controls().autoRotateSpeed=0.35; G.controls().enableZoom=true;
 function size(){G.width(el.clientWidth).height(el.clientHeight);const c=document.getElementById('planes'),r=devicePixelRatio||1;c.width=el.clientWidth*r;c.height=el.clientHeight*r;c.style.width=el.clientWidth+'px';c.style.height=el.clientHeight+'px';}
 
@@ -209,13 +209,15 @@ const col_=k=>col(k);
 requestAnimationFrame(drawPlanes);
 size(); addEventListener('resize',size);
 
+// tinta sobre papel, opaca para que el mar no tiña la tierra
+function onPaper(h,a){const n=parseInt(h.slice(1),16),p=[244,236,220];return `rgb(${[n>>16&255,n>>8&255,n&255].map((v,i)=>Math.round(p[i]*(1-a)+v*a)).join(',')})`;}
 function hexA(h,a){const n=parseInt(h.slice(1),16);return `rgba(${n>>16&255},${n>>8&255},${n&255},${a})`;}
 
 function render(v){
   const c=col(v.k); document.documentElement.style.setProperty('--accent',c);
   const max=v.list.length?v.list[0][1]:1, lmax=Math.log(max+1);
-  G.polygonCapColor(f=>{const n=v.dest[f.properties.iso]; if(!n) return 'rgba(35,48,107,0.10)';
-      return hexA(c,0.14+0.8*Math.sqrt(n/max));})
+  G.polygonCapColor(f=>{const n=v.dest[f.properties.iso]; if(!n) return '#efe6d2';
+      return onPaper(c,0.14+0.8*Math.sqrt(n/max));})
    .polygonsTransitionDuration(reduce?0:900);
   const fmax=v.flows.length?v.flows[0].v:1;
   setFlights(v.flows.filter(f=>D.cen[f.o]&&D.cen[f.d]),fmax);
