@@ -165,7 +165,7 @@ const G=Globe({animateIn:!reduce})(el)
   .htmlLat(l=>l.lat).htmlLng(l=>l.lng).htmlAltitude(0.015)
   .htmlElement(l=>{const w=document.createElement('div');w.className='glabel';const s=document.createElement('span');s.textContent=l.t;s.style.fontSize=`clamp(12px,${(0.75+0.75*l.s).toFixed(2)}vw,34px)`;w.appendChild(s);return w;})
   .htmlElementVisibilityModifier((el,visible)=>{el.style.opacity=visible?1:0;});
-const mat=G.globeMaterial(); mat.color.set('#8fcbe6'); mat.emissive&&mat.emissive.set('#4f9cc7'); mat.shininess=0;
+const mat=G.globeMaterial(); mat.color.set('#b9d7e1'); mat.emissive&&mat.emissive.set('#7fa9bb'); mat.shininess=0;
 G.controls().autoRotate=!reduce; G.controls().autoRotateSpeed=0.35; G.controls().enableZoom=true;
 function size(){G.width(el.clientWidth).height(el.clientHeight);const c=document.getElementById('planes'),r=devicePixelRatio||1;c.width=el.clientWidth*r;c.height=el.clientHeight*r;c.style.width=el.clientWidth+'px';c.style.height=el.clientHeight+'px';}
 
