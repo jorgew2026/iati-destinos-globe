@@ -5,16 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Destinos IATI</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&display=swap">
 <style>
 /* Layout: full-bleed night globe as the stage; a single right-hand rail carries market, total and ranking. Built for a 16:9 wall screen, stacks on phones. */
 :root{
-  --ink:#0d0f14; --ink-2:#161a22; --line:#262b36; --fg:#f3f1ea; --muted:#8a90a0;
-  --brand:#FBBA00;
-  --m-ES:#FBBA00; --m-PT:#35d0b0; --m-IT:#ff7a6b; --m-LATAM:#b28cff; --m-ROW:#5aa9ff;
+  /* Riso: papel crudo + tintas planas que se sobreimprimen (multiply), grano y registro desplazado */
+  --ink:#1b2350; --ink-2:#212a5e; --line:#3b4680; --fg:#f4ecdc; --muted:#aab0d4; --paper:#f4ecdc; --navy:#1b2350;
+  --brand:#ff48b0; --pink:#ff48b0; --blue:#0078bf;
+  --m-ES:#ffb511; --m-PT:#00a95c; --m-IT:#ff665e; --m-LATAM:#9d7ad2; --m-ROW:#0078bf;
   --display:"Onest",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
   --mono:var(--display);
-  color-scheme:dark;
+  color-scheme:light;
 }
 html,body{height:100%}
 body{margin:0;background:var(--ink);color:var(--fg);font-family:var(--display);overflow:hidden}
@@ -24,14 +25,14 @@ body{margin:0;background:var(--ink);color:var(--fg);font-family:var(--display);o
 #globe canvas{display:block}
 .brandmark{position:absolute;left:clamp(16px,2.5vw,48px);top:clamp(16px,2.5vw,44px);z-index:2;pointer-events:none}
 .brandmark .eyebrow{font:500 clamp(11px,.85vw,16px)/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--brand)}
-.brandmark h1{margin:0;font-weight:800;font-size:clamp(28px,3.4vw,72px);line-height:.95;letter-spacing:-.02em;text-wrap:balance}
+.brandmark h1{margin:0;font-weight:600;font-size:clamp(28px,3.4vw,72px);line-height:.95;letter-spacing:-.02em;text-wrap:balance}
 .brandmark p{margin:.6em 0 0;color:var(--muted);font-size:clamp(13px,1vw,20px)}
 .legend{position:absolute;left:clamp(16px,2.5vw,48px);bottom:clamp(16px,2.5vw,40px);z-index:2;display:flex;flex-wrap:wrap;gap:.4em 1.4em;font:500 clamp(11px,.8vw,15px)/1.2 var(--mono);color:var(--muted)}
 .legend span{display:inline-flex;align-items:center;gap:.5em}
 .legend i{width:1.6em;height:3px;border-radius:2px;display:inline-block}
 .spot{position:absolute;right:clamp(16px,2vw,40px);bottom:clamp(16px,2.5vw,40px);z-index:2;text-align:right;pointer-events:none;max-width:60%}
 .spot .k{font:500 clamp(11px,.8vw,15px)/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-.spot .v{font-weight:800;font-size:clamp(24px,2.6vw,56px);letter-spacing:-.02em;line-height:1.05;margin-top:.2em}
+.spot .v{font-weight:600;font-size:clamp(24px,2.6vw,56px);letter-spacing:-.02em;line-height:1.05;margin-top:.2em}
 .spot .n{font:500 clamp(13px,1vw,20px)/1.2 var(--mono);color:var(--accent,var(--brand));margin-top:.3em;font-variant-numeric:tabular-nums}
 
 .rail{min-width:0;background:var(--ink-2);border-left:1px solid var(--line);display:flex;flex-direction:column;gap:clamp(14px,1.6vw,32px);padding:clamp(16px,2vw,44px) clamp(16px,2vw,40px);overflow:hidden}
@@ -42,7 +43,7 @@ body{margin:0;background:var(--ink);color:var(--fg);font-family:var(--display);o
 .tab[aria-pressed="true"]{color:var(--ink);background:var(--c);border-color:var(--c)}
 .tab .bar{position:absolute;left:0;bottom:0;height:3px;background:rgba(13,15,20,.45);width:0}
 .total .k{font:500 clamp(11px,.8vw,15px)/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-.total .v{font-weight:800;font-size:clamp(44px,5.2vw,120px);line-height:1;letter-spacing:-.03em;margin-top:.12em;font-variant-numeric:tabular-nums;color:var(--accent,var(--brand))}
+.total .v{font-weight:600;font-size:clamp(44px,5.2vw,120px);line-height:1;letter-spacing:-.03em;margin-top:.12em;font-variant-numeric:tabular-nums;color:var(--accent,var(--brand))}
 .total .s{color:var(--muted);font-size:clamp(12px,.9vw,18px);margin-top:.4em}
 .rank{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:clamp(6px,.7vw,14px);flex:1;min-height:0}
 .rank li{display:grid;grid-template-columns:2ch minmax(0,1fr) auto;align-items:baseline;gap:.2em .8em;font-size:clamp(14px,1.15vw,24px)}
@@ -52,8 +53,19 @@ body{margin:0;background:var(--ink);color:var(--fg);font-family:var(--display);o
 .rank .b{grid-column:2/4;height:4px;background:var(--line);border-radius:2px;overflow:hidden}
 .rank .b i{display:block;height:100%;background:var(--accent,var(--brand));border-radius:2px;transition:width .8s ease}
 .foot{display:flex;justify-content:space-between;gap:1em;flex-wrap:wrap;font:400 clamp(10px,.72vw,14px)/1.4 var(--mono);color:var(--muted);border-top:1px solid var(--line);padding-top:.9em}
+.scene-nav-info{display:none!important}
 .glabel{pointer-events:none;transition:opacity .4s}
-.glabel span{display:block;transform:translate(-50%,-135%);white-space:nowrap;font:700 14px/1 var(--display);color:var(--fg);text-shadow:0 1px 3px var(--ink),0 0 10px var(--ink)}
+.glabel span{display:block;transform:translate(-50%,-135%);white-space:nowrap;font:600 14px/1 var(--display);color:var(--navy);text-shadow:-1.5px -1.5px 0 var(--paper),1.5px -1.5px 0 var(--paper),-1.5px 1.5px 0 var(--paper),1.5px 1.5px 0 var(--paper)}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:50;background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.12  0 0 0 0 0.12  0 0 0 0 0.2  0 0 0 1.1 -0.35'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");mix-blend-mode:soft-light;opacity:.9}
+.stage::before{content:'';position:absolute;inset:0;pointer-events:none;z-index:1;background:radial-gradient(circle at 50% 50%,rgba(244,236,220,.07) 28%,transparent 31%) 0 0/7px 7px}
+#planes{position:absolute;inset:0;z-index:2;pointer-events:none}
+#globe canvas{filter:drop-shadow(4px 3px 0 rgba(255,72,176,.45)) saturate(1.15) contrast(1.05)}
+.brandmark h1{color:var(--paper)}
+
+.spot .v{color:var(--paper)}
+.rank .b i{background:repeating-linear-gradient(90deg,var(--accent,var(--brand)) 0 3px,transparent 3px 5px)}
+.rail{border-left:2px dashed var(--line)}
+
 .fs{appearance:none;background:none;border:0;color:var(--muted);font:inherit;cursor:pointer;padding:0;text-decoration:underline}
 .fs:focus-visible{outline:2px solid var(--brand)}
 
@@ -71,6 +83,7 @@ body{margin:0;background:var(--ink);color:var(--fg);font-family:var(--display);o
 <div class="app">
   <div class="stage" id="stage">
     <div id="globe"></div>
+    <canvas id="planes" aria-hidden="true"></canvas>
     <div class="brandmark">
       <h1>¿A dónde viajan<br>nuestros clientes?</h1>
     </div>
@@ -138,11 +151,11 @@ setUpd();
 const el=document.getElementById('globe');
 const G=Globe({animateIn:!reduce})(el)
   .backgroundColor('rgba(0,0,0,0)')
-  .showAtmosphere(true).atmosphereColor('#3a6df0').atmosphereAltitude(0.18)
+  .showAtmosphere(true).atmosphereColor('#ff48b0').atmosphereAltitude(0.12)
   .polygonsData(window.GEO.features)
   .polygonAltitude(0.006)
   .polygonSideColor(()=>'rgba(0,0,0,0)')
-  .polygonStrokeColor(()=>'rgba(243,241,234,0.10)')
+  .polygonStrokeColor(()=>'rgba(35,48,107,0.45)')
   .arcStartLat(a=>D.cen[a.o][0]).arcStartLng(a=>D.cen[a.o][1])
   .arcEndLat(a=>D.cen[a.d][0]).arcEndLng(a=>D.cen[a.d][1])
   .arcDashLength(0.45).arcDashGap(1.2).arcDashInitialGap(()=>Math.random()*1.6)
@@ -152,9 +165,48 @@ const G=Globe({animateIn:!reduce})(el)
   .htmlLat(l=>l.lat).htmlLng(l=>l.lng).htmlAltitude(0.015)
   .htmlElement(l=>{const w=document.createElement('div');w.className='glabel';const s=document.createElement('span');s.textContent=l.t;s.style.fontSize=`clamp(12px,${(0.75+0.75*l.s).toFixed(2)}vw,34px)`;w.appendChild(s);return w;})
   .htmlElementVisibilityModifier((el,visible)=>{el.style.opacity=visible?1:0;});
-const mat=G.globeMaterial(); mat.color.set('#131a2b'); mat.emissive&&mat.emissive.set('#0a0f1c'); mat.shininess=4;
+const mat=G.globeMaterial(); mat.color.set('#f4ecdc'); mat.emissive&&mat.emissive.set('#d9cfb8'); mat.shininess=0;
 G.controls().autoRotate=!reduce; G.controls().autoRotateSpeed=0.35; G.controls().enableZoom=true;
-function size(){G.width(el.clientWidth).height(el.clientHeight);}
+function size(){G.width(el.clientWidth).height(el.clientHeight);const c=document.getElementById('planes'),r=devicePixelRatio||1;c.width=el.clientWidth*r;c.height=el.clientHeight*r;c.style.width=el.clientWidth+'px';c.style.height=el.clientHeight+'px';}
+
+// ---- aviones: cada ruta origen→destino lleva 1–3 aviones en vuelo continuo ----
+const PLANE=new Path2D('M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z');
+let flights=[];
+const rad=Math.PI/180;
+function vec(la,lo){la*=rad;lo*=rad;return [Math.cos(la)*Math.cos(lo),Math.cos(la)*Math.sin(lo),Math.sin(la)];}
+function setFlights(fl,fmax){
+  flights=[];
+  fl.forEach(f=>{const a=vec(...D.cen[f.o]),b=vec(...D.cen[f.d]);
+    const w=Math.acos(Math.min(1,Math.max(-1,a[0]*b[0]+a[1]*b[1]+a[2]*b[2])));if(w<0.02)return;
+    const n=1+Math.round(2*Math.sqrt(f.v/fmax)), dur=4500+w*2600;
+    for(let k=0;k<n;k++)flights.push({a,b,w,m:f.m,dur,ph:Math.random()+k/n,size:0.75+0.5*Math.sqrt(f.v/fmax)});});
+}
+function pos(fl,t){const s=Math.sin(fl.w),ka=Math.sin((1-t)*fl.w)/s,kb=Math.sin(t*fl.w)/s;
+  const x=ka*fl.a[0]+kb*fl.b[0],y=ka*fl.a[1]+kb*fl.b[1],z=ka*fl.a[2]+kb*fl.b[2];
+  return [Math.atan2(z,Math.hypot(x,y))/rad,Math.atan2(y,x)/rad,(0.04+0.28*fl.w/Math.PI)*Math.sin(Math.PI*t)];}
+function visible(la,lo,al){const p=G.getCoords(la,lo,al),c=G.camera().position,R=G.getGlobeRadius();return (p.x*c.x+p.y*c.y+p.z*c.z)>R*R*1.02;}
+function drawPlanes(now){
+  const c=document.getElementById('planes'),x=c.getContext('2d'),r=devicePixelRatio||1;
+  x.setTransform(r,0,0,r,0,0);x.clearRect(0,0,c.width,c.height);
+  const base=Math.max(14,el.clientWidth/55);
+  flights.forEach(fl=>{
+    const t=((now/fl.dur)+fl.ph)%1; const col=col_(fl.m);
+    // estela punteada
+    for(let k=6;k>=1;k--){const tt=t-k*0.018;if(tt<=0)continue;const [la,lo,al]=pos(fl,tt);if(!visible(la,lo,al))continue;const s=G.getScreenCoords(la,lo,al);
+      x.globalAlpha=0.5*(1-k/7);x.fillStyle=col;x.beginPath();x.arc(s.x,s.y,2.2,0,6.283);x.fill();}
+    const [la,lo,al]=pos(fl,t); if(!visible(la,lo,al))return;
+    const s=G.getScreenCoords(la,lo,al),n=pos(fl,Math.min(1,t+0.01)),s2=G.getScreenCoords(n[0],n[1],n[2]);
+    const ang=Math.atan2(s2.y-s.y,s2.x-s.x)+Math.PI/2, sz=base*fl.size*(0.8+1.6*al);
+    const fade=Math.min(1,t*12,(1-t)*12);
+    x.save();x.translate(s.x,s.y);x.rotate(ang);x.scale(sz/24,sz/24);x.translate(-12,-12);
+    x.globalAlpha=0.55*fade;x.fillStyle='#ff48b0';x.translate(1.6,1.2);x.fill(PLANE);x.translate(-1.6,-1.2); // registro desplazado
+    x.globalAlpha=fade;x.fillStyle=col;x.fill(PLANE);x.restore();
+  });
+  x.globalAlpha=1;
+  if(!reduce)requestAnimationFrame(drawPlanes);
+}
+const col_=k=>col(k);
+requestAnimationFrame(drawPlanes);
 size(); addEventListener('resize',size);
 
 function hexA(h,a){const n=parseInt(h.slice(1),16);return `rgba(${n>>16&255},${n>>8&255},${n&255},${a})`;}
@@ -162,13 +214,11 @@ function hexA(h,a){const n=parseInt(h.slice(1),16);return `rgba(${n>>16&255},${n
 function render(v){
   const c=col(v.k); document.documentElement.style.setProperty('--accent',c);
   const max=v.list.length?v.list[0][1]:1, lmax=Math.log(max+1);
-  G.polygonCapColor(f=>{const n=v.dest[f.properties.iso]; if(!n) return 'rgba(40,48,66,0.55)';
+  G.polygonCapColor(f=>{const n=v.dest[f.properties.iso]; if(!n) return 'rgba(35,48,107,0.10)';
       return hexA(c,0.14+0.8*Math.sqrt(n/max));})
    .polygonsTransitionDuration(reduce?0:900);
   const fmax=v.flows.length?v.flows[0].v:1;
-  G.arcsData(v.flows.filter(f=>D.cen[f.o]&&D.cen[f.d]))
-   .arcColor(f=>{const cc=col(f.m);return [hexA(cc,0.15),hexA(cc,0.95)];})
-   .arcStroke(f=>0.25+1.1*Math.sqrt(f.v/fmax));
+  setFlights(v.flows.filter(f=>D.cen[f.o]&&D.cen[f.d]),fmax);
   const top=v.list.filter(([i])=>D.cen[i]).slice(0,12);
   G.ringsData(top.map(([i,n],j)=>({lat:D.cen[i][0],lng:D.cen[i][1],r:2+5*Math.sqrt(n/max),p:900+j*140})))
    .ringColor(()=>t=>hexA(c,1-t));
