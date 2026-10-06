@@ -22,7 +22,7 @@ client = BetaAnalyticsDataClient()
 def run(prop, dims):
     req = RunReportRequest(
         property=f'properties/{prop}',
-        date_ranges=[DateRange(start_date=monday.isoformat(), end_date='today')],
+        date_ranges=[DateRange(start_date=monday.isoformat(), end_date=today.isoformat())],
         dimensions=[Dimension(name=d) for d in dims],
         metrics=[Metric(name='eventCount')],
         dimension_filter=FilterExpression(filter=Filter(
