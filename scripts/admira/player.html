@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Destinos IATI · Admira</title>
+<style>
+html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background: #1b2350; }
+#slide { display: block; width: 100%; height: 100%; object-fit: contain; color: #f4ecdc; }
+</style>
+</head>
+<body>
+<img id="slide" alt="Destinos IATI">
+<script type="application/json" id="slides">__SLIDES__</script>
+<script>
+(function () {
+  "use strict";
+  var image = document.getElementById("slide");
+  var pack = JSON.parse(document.getElementById("slides").textContent);
+  var index = 0;
+  var elapsedSince = null;
+
+  function display() {
+    var slide = pack.slides[index];
+    image.alt = slide.label;
+    image.src = slide.image;
+  }
+
+  function tick() {
+    if (document.hidden || !image.clientWidth || !image.clientHeight) {
+      elapsedSince = null;
+      return;
+    }
+    var now = Date.now();
+    if (elapsedSince === null) elapsedSince = now;
+    if (now - elapsedSince < 10000) return;
+    elapsedSince = now;
+    index = (index + 1) % pack.slides.length;
+    display();
+  }
+
+  function refresh() {
+    try {
+      var request = new XMLHttpRequest();
+      request.open("GET", "admira-frames.json?t=" + Date.now(), true);
+      request.timeout = 15000;
+      request.onload = function () {
+        if (request.status !== 200) return;
+        try {
+          var next = JSON.parse(request.responseText);
+          if (typeof next.updatedAt !== "string" || next.updatedAt <= pack.updatedAt ||
+              !Array.isArray(next.slides) || next.slides.length !== pack.slides.length ||
+              !next.slides.every(function (slide) {
+                return typeof slide.label === "string" && typeof slide.image === "string" &&
+                  slide.image.indexOf("data:image/jpeg;base64,/9j/") === 0;
+              })) return;
+          pack = next;
+          display();
+        } catch (error) {
+          // Keep the last complete set if the response is incomplete.
+        }
+      };
+      request.send();
+    } catch (error) {
+      // The embedded views remain playable without connectivity.
+    }
+  }
+
+  display();
+  setInterval(tick, 500);
+  setInterval(refresh, 10 * 60 * 1000);
+  refresh();
+}());
+</script>
+</body>
+</html>

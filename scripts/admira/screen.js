@@ -8,7 +8,7 @@
     ["LATAM", "LATAM", "#c5a5ff", 14, -76],
     ["ROW", "Resto del mundo", "#64c4ff", 27, 105]
   ];
-  var index = 0, visibleSince = null, lastFrame = 0, flights = [];
+  var index = 0, flights = [];
   var tau = 2 * Math.PI, rad = Math.PI / 180;
   var map = document.getElementById("map");
   var stage = map.parentNode;
@@ -131,7 +131,6 @@
     cy = map.height / 2;
     radius = Math.min(cx, cy) * 0.91;
     drawEarth();
-    drawFrame(performance.now());
   }
 
   function drawEarth() {
@@ -283,90 +282,28 @@
     return date ? "Actualizado " + date[3] + "/" + date[2] + " · " + date[4] + " Madrid" : "Datos de GA4";
   }
 
-  function refresh() {
-    var request = new XMLHttpRequest();
-    try {
-      request.open("GET", "https://jorgew2026.github.io/iati-destinos-globe/data.json?t=" + Date.now(), true);
-      request.timeout = 12000;
-      request.onload = function () {
-        try {
-          if (request.status !== 200) return;
-          var next = JSON.parse(request.responseText);
-          if (!next.markets || !next.cen || !next.names || next.updatedAt <= snapshot.updatedAt) return;
-          snapshot = next;
-          showMarket();
-          status(stamp());
-        } catch (error) {
-          console.warn("No se pudieron aplicar los datos de destinos", error);
-        }
-      };
-      request.send();
-    } catch (error) {
-      console.warn("No se pudieron solicitar los datos de destinos", error);
-    }
-  }
 
-  try {
-    snapshot = JSON.parse(id("snapshot").textContent);
+  snapshot = JSON.parse(id("snapshot").textContent);
+  features = JSON.parse(id("geography").textContent).features;
+  status(stamp());
+  markets.slice(1).forEach(function (market) {
+    var item = document.createElement("span"), dot = document.createElement("i");
+    dot.style.backgroundColor = market[2];
+    item.appendChild(dot);
+    item.appendChild(document.createTextNode(market[1]));
+    id("legend").appendChild(item);
+  });
+
+  ctx = map.getContext("2d");
+  surface = background.getContext("2d");
+  texture.width = 1080;
+  texture.height = 540;
+  ink = texture.getContext("2d");
+
+  window.renderAdmiraFrame = function (marketIndex) {
+    index = marketIndex;
     showMarket();
-    status(stamp());
-    markets.slice(1).forEach(function (market) {
-      var item = document.createElement("span"), dot = document.createElement("i");
-      dot.style.backgroundColor = market[2];
-      item.appendChild(dot);
-      item.appendChild(document.createTextNode(market[1]));
-      id("legend").appendChild(item);
-    });
-  } catch (error) {
-    status("Datos de destinos no disponibles");
-    return;
-  }
-
-  try {
-    features = JSON.parse(id("geography").textContent).features;
-    ctx = map.getContext("2d");
-    surface = background.getContext("2d");
-    texture.width = 1080;
-    texture.height = 540;
-    ink = texture.getContext("2d");
-    if (!surface || !ink) ctx = null;
-    if (ctx) showMarket();
-    if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(function () { if (ctx && radius) drawEarth(); }).catch(function () {});
-    }
-  } catch (error) {
-    ctx = null;
-    console.warn("Globo no disponible en este reproductor", error);
-  }
-
-  var lastWidth = 0, lastHeight = 0;
-  function tick(now) {
-    requestAnimationFrame(tick);
-    if (document.hidden || !stage.clientWidth || !stage.clientHeight) {
-      visibleSince = null;
-      return;
-    }
-    if (now - lastFrame < 40) return;
-    lastFrame = now;
-    if (visibleSince === null) visibleSince = now;
-    try {
-      if (lastWidth !== map.clientWidth || lastHeight !== map.clientHeight) {
-        lastWidth = map.clientWidth;
-        lastHeight = map.clientHeight;
-        resize();
-      }
-      if (now - visibleSince >= 10000) {
-        visibleSince = now;
-        index = (index + 1) % markets.length;
-        showMarket();
-      }
-      drawFrame(now);
-    } catch (error) {
-      ctx = null;
-      console.warn("Globo no disponible en este reproductor", error);
-    }
-  }
-  requestAnimationFrame(tick);
-  refresh();
-  setInterval(refresh, 10 * 60 * 1000);
+    drawFrame(2800);
+    return markets[index][1] + " · " + id("total").textContent + " pólizas esta semana";
+  };
 }());

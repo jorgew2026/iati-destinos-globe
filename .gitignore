@@ -4,3 +4,4 @@ sa*.json
 .DS_Store
 
 /site/admira.html
+/site/admira-frames.json
