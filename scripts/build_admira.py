@@ -4,7 +4,6 @@ import os
 import sys
 import json
 from pathlib import Path
-import re
 
 ROOT = Path(__file__).resolve().parents[1]
 ASSETS = ROOT / "scripts/admira"
@@ -16,12 +15,7 @@ def inline_json(value):
 
 def build():
     site = ROOT / "site"
-    original = (site / "index.html").read_text(encoding="utf-8")
-    match = re.search(r"^window\.GEO=(.+);$", original, re.M)
-    if not match:
-        raise ValueError("No se encontró la cartografía en site/index.html")
     page = (ASSETS / "screen.html").read_text(encoding="utf-8")
-    page = page.replace("__MAP__", inline_json(json.loads(match[1])))
     snapshot = json.loads((site / "data.json").read_text(encoding="utf-8"))
     page = page.replace("__SNAPSHOT__", inline_json(snapshot))
     page = page.replace("__SCREEN_JS__", (ASSETS / "screen.js").read_text(encoding="utf-8"))

@@ -17,7 +17,14 @@ class AdmiraBuildTest(unittest.TestCase):
         pack = json.loads(match[1])
         self.assertEqual(pack, json.loads((ROOT / "site/admira-frames.json").read_text()))
         self.assertEqual(pack["updatedAt"], json.loads((ROOT / "site/data.json").read_text())["updatedAt"])
-        self.assertEqual(len(pack["slides"]), 6)
+        snapshot = json.loads((ROOT / "site/data.json").read_text())
+        market_labels = {"ES": "España", "PT": "Portugal", "IT": "Italia", "LATAM": "LATAM", "ROW": "Resto del mundo"}
+        expected = [("Todos los mercados", sum(m["policies"] for m in snapshot["markets"].values()))]
+        expected.extend((label, snapshot["markets"].get(key, {}).get("policies", 0))
+                        for key, label in market_labels.items())
+        labels = [f"Panel split-flap · {label} · {count:,}".replace(",", ".") + " pólizas esta semana"
+                  for label, count in expected]
+        self.assertEqual([slide["label"] for slide in pack["slides"]], labels)
         for slide in pack["slides"]:
             self.assertTrue(slide["image"].startswith("data:image/jpeg;base64,/9j/"))
         self.assertNotRegex(page, r"<canvas|requestAnimationFrame|getContext\(")

@@ -1,67 +1,44 @@
 <!doctype html>
-<html lang="es">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Destinos IATI · Admira</title>
+<html lang="es"><head><meta charset="utf-8"><title>Próximos destinos · IATI</title>
 <!-- __FONT_LICENSE__ -->
 <style>
-@font-face{font-family:Onest;src:url(data:font/woff2;base64,__ONEST_400__) format("woff2");font-weight:400}
-@font-face{font-family:Onest;src:url(data:font/woff2;base64,__ONEST_600__) format("woff2");font-weight:600}
+@font-face{font-family:Onest;src:url(data:font/woff2;base64,__ONEST_400__)}
+@font-face{font-family:Onest;src:url(data:font/woff2;base64,__ONEST_600__);font-weight:600}
 *{box-sizing:border-box}
-html,body{width:100%;height:100%;margin:0;overflow:hidden}
-body{background:#1b2350;color:#f4ecdc;font:400 1.15vw Onest,Arial,sans-serif}
-.screen{display:flex;width:100%;height:100%}
-.stage{position:relative;width:69%;height:100%;overflow:hidden;background:radial-gradient(circle,#343d6c 12%,transparent 24%) 0 0/6px 6px}
-#map{position:absolute;top:15%;bottom:9%;width:100%;height:76%}
-h1{position:absolute;top:4.5%;left:5%;margin:0;font-size:3.15vw;line-height:1.04;font-weight:600}
-#legend{position:absolute;left:5%;bottom:4%;color:#e0e0f1}
-#legend span{display:inline-block;margin-right:1em;white-space:nowrap}
-#legend i{display:inline-block;width:.6em;height:.6em;margin-right:.35em;border-radius:50%}
-.rail{display:flex;flex-direction:column;width:31%;height:100%;padding:2.6vh 2vw;background:#212a5e;border-left:1px dashed #596394}
-#market,.caption,#status{color:#c3c8e5}
-#market{font-weight:600;letter-spacing:.07em;text-transform:uppercase}
-.caption{margin-top:2vh}
-#total{font-size:4.8vw;font-weight:600;line-height:1.1;margin:.25vh 0 .45vh}
-#summary{color:#e0e0f1}
-ol{flex:1;min-height:0;display:flex;flex-direction:column;margin:2vh 0 1.6vh;padding:0;list-style:none}
-li{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center;border-bottom:1px solid #3b4680}
-.rank-row{display:flex;align-items:center;font-size:1.37vw;line-height:1.15}
-.position{width:1.7em;color:#c3c8e5;font-size:.8em}
-.name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding-right:.3em}
-.amount{font-weight:600}
-.track{height:.38vh;margin:.64vh 0 .15vh 1.85em;background:#384470}
-.track i{display:block;height:100%}
-#status{font-size:.88vw}
-@media(min-aspect-ratio:2/1){
-  body{font-size:2.15vh}h1{font-size:5.6vh}#total{font-size:8.5vh}
-  .rank-row{font-size:2.5vh}#status{font-size:1.6vh}
-}
-@media(max-aspect-ratio:1/1){
-  .screen{flex-direction:column}.stage{width:100%;height:51%}.rail{width:100%;height:49%;padding:1.6vh 5vw;border-left:0;border-top:1px dashed #596394}
-  body{font-size:2.3vw}h1{font-size:5.8vw}#total{font-size:7vw}
-  .caption{margin-top:.7vh}ol{margin:.5vh 0}.rank-row{font-size:2.7vw}.track{height:.24vh;margin:.25vh 0 0 1.85em}#status{font-size:1.9vw}
-}
-</style>
-</head>
-<body>
-<main class="screen">
-  <section class="stage">
-    <canvas id="map" aria-label="Globo con los destinos y rutas de viaje"></canvas>
-    <h1>¿A dónde viajan<br>nuestros clientes?</h1>
-    <div id="legend"></div>
-  </section>
-  <aside class="rail">
-    <div id="market"></div>
-    <div class="caption">Pólizas vendidas esta semana</div>
-    <div id="total">—</div>
-    <div id="summary"></div>
-    <ol id="rank" aria-label="Destinos más vendidos"></ol>
-    <div id="status">Cargando datos…</div>
-  </aside>
+body{margin:0;color:#f7f7f6;background:#1d1d1b;font:400 20px Onest,Arial,sans-serif}
+main{width:1280px;height:720px;padding:46px 62px 38px}
+header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:36px}
+.market{color:#fbba00;font-size:17px;font-weight:600;margin-bottom:11px}
+h1{font-size:57px;line-height:1;margin:0;font-weight:600;letter-spacing:-.05em}
+.summary{text-align:right}
+.summary p{margin:0 0 9px;color:#d4d1c5;font-size:16px}
+.cells{display:flex;gap:4px}
+.tile{position:relative;display:grid;place-items:center;width:39px;height:48px;border-radius:4px;background:#30302c;color:#fbba00;font-size:30px;font-weight:600;line-height:1;font-variant-numeric:tabular-nums;box-shadow:0 2px 0 #111110}
+.tile::after{position:absolute;inset:50% 0 auto;height:1px;background:#171715;opacity:.72;content:""}
+.tile.blank{background:#272725}
+.destination{--columns:18;display:grid;grid-template-columns:repeat(var(--columns),minmax(0,39px))}
+.destination .tile{width:auto;font-size:var(--letter-size,30px)}
+.amount{justify-content:flex-end}
+.heading,.row{grid-template-columns:112px minmax(0,1fr) max-content}
+.empty{display:flex;align-items:center;justify-content:center;min-height:335px;color:#ddd9cc;font-size:24px}
+.summary .tile{width:44px;height:55px;font-size:35px}
+.summary .cells{justify-content:flex-end}
+.heading,.row{display:grid;grid-template-columns:112px minmax(0,1fr) max-content;gap:20px;align-items:center}
+.heading{color:#ddd9cc;font-size:16px;margin-bottom:10px;padding:0 12px}
+.frame{padding:9px 12px 11px;background:#181817;border:1px solid #494942;border-radius:7px}
+.row{height:67px;border-bottom:1px solid #3c3b35}
+.row:last-child{border-bottom:0}
+.row .rank .tile{color:#d5c899}
+.row:first-child .tile:not(.blank){background:#3a3423;color:#ffca30}
+footer{display:flex;justify-content:space-between;color:#d4d1c5;margin-top:22px;font-size:16px}
+</style></head>
+<body><main>
+<header><div><div class="market" id="market"></div><h1>Próximos destinos</h1></div>
+<div class="summary"><p>Pólizas vendidas esta semana</p><div class="cells" id="total"></div></div></header>
+<div class="heading"><span>Puesto</span><span>Destino</span><span>Pólizas</span></div>
+<div class="frame" id="board"></div>
+<footer><span id="destinations"></span><span id="updated"></span></footer>
 </main>
 <script type="application/json" id="snapshot">__SNAPSHOT__</script>
-<script type="application/json" id="geography">__MAP__</script>
 <script>__SCREEN_JS__</script>
-</body>
-</html>
+</body></html>
