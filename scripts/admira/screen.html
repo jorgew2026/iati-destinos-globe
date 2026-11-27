@@ -7,19 +7,19 @@
 *{box-sizing:border-box}
 body{margin:0;color:#f7f7f6;background:#1d1d1b;font:400 20px Onest,Arial,sans-serif}
 main{width:1280px;height:720px;padding:46px 62px 38px}
-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:36px}
-.market{color:#fbba00;font-size:17px;font-weight:600;margin-bottom:11px}
-h1{font-size:57px;line-height:1;margin:0;font-weight:600;letter-spacing:-.05em}
-.summary{text-align:right}
+header{display:flex;justify-content:space-between;align-items:flex-end;gap:26px;margin-bottom:36px}
+.headline{flex:1;min-width:0}
+.period{color:#fbba00;font-size:17px;font-weight:600;margin-bottom:11px}
+h1{font-size:57px;line-height:1;margin:0;font-weight:600;letter-spacing:-.05em;white-space:nowrap}
+.summary{flex:none;text-align:right}
 .summary p{margin:0 0 9px;color:#d4d1c5;font-size:16px}
 .cells{display:flex;gap:4px}
 .tile{position:relative;display:grid;place-items:center;width:39px;height:48px;border-radius:4px;background:#30302c;color:#fbba00;font-size:30px;font-weight:600;line-height:1;font-variant-numeric:tabular-nums;box-shadow:0 2px 0 #111110}
 .tile::after{position:absolute;inset:50% 0 auto;height:1px;background:#171715;opacity:.72;content:""}
 .tile.blank{background:#272725}
-.destination{--columns:18;display:grid;grid-template-columns:repeat(var(--columns),minmax(0,39px))}
-.destination .tile{width:auto;font-size:var(--letter-size,30px)}
+.destination{display:grid;grid-template-columns:repeat(var(--columns),minmax(0,1fr))}
+.destination .tile{width:auto;height:56px;font-size:var(--letter-size,44px)}
 .amount{justify-content:flex-end}
-.heading,.row{grid-template-columns:112px minmax(0,1fr) max-content}
 .empty{display:flex;align-items:center;justify-content:center;min-height:335px;color:#ddd9cc;font-size:24px}
 .summary .tile{width:44px;height:55px;font-size:35px}
 .summary .cells{justify-content:flex-end}
@@ -33,7 +33,7 @@ h1{font-size:57px;line-height:1;margin:0;font-weight:600;letter-spacing:-.05em}
 footer{display:flex;justify-content:space-between;color:#d4d1c5;margin-top:22px;font-size:16px}
 </style></head>
 <body><main>
-<header><div><div class="market" id="market"></div><h1>Próximos destinos</h1></div>
+<header><div class="headline"><div class="period">Esta semana</div><h1 id="title"></h1></div>
 <div class="summary"><p>Pólizas vendidas esta semana</p><div class="cells" id="total"></div></div></header>
 <div class="heading"><span>Puesto</span><span>Destino</span><span>Pólizas</span></div>
 <div class="frame" id="board"></div>
