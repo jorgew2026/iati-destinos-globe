@@ -51,6 +51,9 @@ jobs:
           git add site/data.json
           git diff --cached --quiet || (git commit -m "data: refresh $(date -u +%Y-%m-%dT%H:%MZ)" && git push)
 
+      - name: Build standalone Admira page
+        run: python scripts/build_admira.py
+
       - uses: actions/configure-pages@v6
       - uses: actions/upload-pages-artifact@v5
         with:

@@ -2,3 +2,5 @@ raw/
 *.json.key
 sa*.json
 .DS_Store
+
+/site/admira.html
