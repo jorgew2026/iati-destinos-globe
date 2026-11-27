@@ -33,13 +33,17 @@ def build():
             executable_path=chrome or None, channel=None if chrome else "chrome",
             args=["--disable-webgl"],
         )
-        frame = browser.new_page(viewport={"width": 1280, "height": 720}, device_scale_factor=1)
+        # Keep the authored 16:9 layout and rasterize it at Admira's output resolution.
+        frame = browser.new_page(
+            viewport={"width": 1280, "height": 720},
+            device_scale_factor=1536 / 1280,
+        )
         frame.set_content(page)
         frame.evaluate("Promise.all([document.fonts.load('400 16px Onest'), document.fonts.load('600 16px Onest')])")
         slides = []
         for index in range(6):
             label = frame.evaluate("index => window.renderAdmiraFrame(index)", index)
-            jpeg = frame.screenshot(type="jpeg", quality=65)
+            jpeg = frame.screenshot(type="jpeg", quality=65, scale="device")
             encoded = base64.b64encode(jpeg).decode("ascii")
             slides.append({"label": label, "image": "data:image/jpeg;base64," + encoded})
         browser.close()

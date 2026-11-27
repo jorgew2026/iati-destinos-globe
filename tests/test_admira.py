@@ -1,3 +1,4 @@
+import base64
 import json
 from pathlib import Path
 import re
@@ -6,6 +7,18 @@ import sys
 import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def jpeg_size(encoded):
+    jpeg = base64.b64decode(encoded.split(",", 1)[1])
+    offset = 2
+    while offset + 9 <= len(jpeg) and jpeg[offset] == 0xFF:
+        marker = jpeg[offset + 1]
+        if marker in (0xC0, 0xC1, 0xC2):
+            return (int.from_bytes(jpeg[offset + 7:offset + 9], "big"),
+                    int.from_bytes(jpeg[offset + 5:offset + 7], "big"))
+        offset += 2 + int.from_bytes(jpeg[offset + 2:offset + 4], "big")
+    raise ValueError("No se encontraron las dimensiones del JPEG")
 
 
 class AdmiraBuildTest(unittest.TestCase):
@@ -27,6 +40,7 @@ class AdmiraBuildTest(unittest.TestCase):
         self.assertEqual([slide["label"] for slide in pack["slides"]], labels)
         for slide in pack["slides"]:
             self.assertTrue(slide["image"].startswith("data:image/jpeg;base64,/9j/"))
+            self.assertEqual(jpeg_size(slide["image"]), (1536, 864))
         self.assertNotRegex(page, r"<canvas|requestAnimationFrame|getContext\(")
         self.assertLess(len(page.encode("utf-8")), 850_000)
 
